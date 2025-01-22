@@ -1,0 +1,81 @@
+shopButton.addEventListener('click', () => {
+      if (dragoCount >= levelCost * level) {
+        dragoCount -= levelCost * level;
+        level++;
+        saveGameData();
+        updateUI();
+      } else {
+        errorModal.style.display = 'block';
+        overlay.style.display = 'block';
+      }
+    });
+
+    ratingButton.addEventListener('click', () => {
+      updateRating();
+      ratingModal.style.display = 'block';
+      overlay.style.display = 'block';
+    });
+
+    bonusButton.addEventListener('click', () => {
+      bonusButton.disabled = true;
+      bonusButton.textContent = "Бонус активирован!";
+      dragoCount += 100;
+      saveGameData();
+      updateUI();
+    });
+
+    closeErrorModal.addEventListener('click', () => {
+      errorModal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    closeRatingModal.addEventListener('click', () => {
+      ratingModal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    overlay.addEventListener('click', () => {
+      errorModal.style.display = 'none';
+      ratingModal.style.display = 'none';
+      overlay.style.display = 'none';
+    });
+
+    const SERVER_URL = "https://your-server-url.com"; // Замени на URL сервера
+
+// Обновление данных на сервере
+const updateServer = async () => {
+  try {
+    await fetch(${SERVER_URL}/update, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, score: dragoCount, level }),
+    });
+  } catch (error) {
+    console.error("Ошибка обновления данных:", error);
+  }
+};
+
+// Получение рейтинга с сервера
+const fetchRating = async () => {
+  try {
+    const response = await fetch(${SERVER_URL}/rating);
+    const players = await response.json();
+    ratingList.innerHTML = players
+      .map(player => <li>${player.username}: ${player.score} Drago</li>)
+      .join('');
+  } catch (error) {
+    console.error("Ошибка получения рейтинга:", error);
+  }
+};
+
+    // Energy regeneration
+    setInterval(() => {
+      if (energy < 1000) { // Energy can't exceed 1000
+        energy++;
+        updateUI();
+      }
+    }, 1000); // Regenerate every 1 second
+
+  </script>
+</body>
+</html>
